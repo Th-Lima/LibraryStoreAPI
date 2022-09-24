@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryStore.Api.Dtos;
 using LibraryStore.Business.Interfaces;
+using LibraryStore.Data.Repository;
 using LibraryStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +11,14 @@ namespace LibraryStore.Api.Controllers
     public class ProvidersController : MainController
     {
         private readonly IProviderRepository _providerRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IProviderService _providerService;
         private readonly IMapper _mapper;
 
-        public ProvidersController(IProviderRepository providerRepository, IProviderService providerService, IMapper mapper)
+        public ProvidersController(IProviderRepository providerRepository, IAddressRepository addressRepository, IProviderService providerService, IMapper mapper, INotifier notifier) : base(notifier)
         {
             _providerRepository = providerRepository;
+            _addressRepository = addressRepository;
             _providerService = providerService;
             _mapper = mapper;
         }
@@ -43,52 +46,66 @@ namespace LibraryStore.Api.Controllers
         public async Task<ActionResult<ProviderDto>> Add(ProviderDto providerDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return CustomResponse(ModelState);
 
-            var provider = _mapper.Map<Provider>(providerDto);
+            await _providerService.Add(_mapper.Map<Provider>(providerDto));
 
-            var result = await _providerService.Add(provider);
-
-            if (!result)
-                return BadRequest();
-
-            return Ok(_mapper.Map<ProviderDto>(provider));
+            return CustomResponse(providerDto);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<ProviderDto>> Update(Guid id, ProviderDto providerDto)
         {
             if (id != providerDto.Id)
-                return NotFound("Não encontramos este fornecedor");
+            {
+                NotificationErro("Não encontramos este fornecedor, o id não é o mesmo informado na query");
+                
+                return CustomResponse(providerDto);
+            }
 
             if (!ModelState.IsValid)
-                return BadRequest();
+                return CustomResponse(ModelState);
 
-            var provider = _mapper.Map<Provider>(providerDto);
+            await _providerService.Update(_mapper.Map<Provider>(providerDto));
 
-            var result = await _providerService.Update(provider);
-
-            if (!result)
-                return BadRequest();
-
-            return Ok(provider);
+            return CustomResponse(providerDto);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProviderDto>> Delete(Guid id)
         {
-            var provider = await GetProviderAddress(id);
+            var providerDto = await GetProviderAddress(id);
 
-            if (provider == null)
+            if (providerDto == null)
                 return NotFound();
 
-            var result = await _providerService.Remove(id);
+            await _providerService.Remove(id);
 
-            if (!result)
-                return BadRequest();
+            return CustomResponse(providerDto);
+        }
 
-            return Ok(provider);
+        [HttpGet("get-address/{id:guid}")]
+        public async Task<AddressDto> GetAddressById(Guid id)
+        {
+            return _mapper.Map<AddressDto>(await _addressRepository.GetById(id));
+        }
 
+        [HttpPut("update-address/{id:guid}")]
+        public async Task<IActionResult> UpdateAddress(Guid id, AddressDto addressDto)
+        {
+            if (id != addressDto.Id)
+            {
+                NotificationErro("Não encontramos este endereço, o id não é o mesmo informado na query");
+
+                return CustomResponse(addressDto);
+            }
+
+            if (!ModelState.IsValid)
+                return CustomResponse(ModelState);
+
+            await _providerService.UpdateAddress(_mapper.Map<Address>(addressDto));
+
+            return CustomResponse(addressDto);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

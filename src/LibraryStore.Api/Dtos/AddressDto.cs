@@ -39,5 +39,7 @@ namespace LibraryStore.Api.Dtos
         [Required(ErrorMessage = "O Campo {0} é obrigatório")]
         [StringLength(50, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
         public string State { get; set; }
+
+        public Guid ProviderId { get; set; }
     }
 }
