@@ -15,32 +15,34 @@ namespace LibraryStore.Business.Services
             _addressRepository = addressRepository;
         }
 
-        public async Task Add(Provider provider)
+        public async Task<bool> Add(Provider provider)
         {
             if (!ExecuteValidation(new ProviderValidation(), provider) || !ExecuteValidation(new AddressValidation(), provider.Address)) 
-                 return;
+                 return false;
 
             if(_providerRepository.Search(p => p.Document == provider.Document).Result.Any())
             {
                 Notification("Já existe um fornecedor com este documento informado!");
-                return;
+                return false;
             }
 
             await _providerRepository.Add(provider);
+            return true;
         }
 
-        public async Task Update(Provider provider)
+        public async Task<bool> Update(Provider provider)
         {
             if (!ExecuteValidation(new ProviderValidation(), provider))
-                return;
+                return false;
 
             if(_providerRepository.Search(p => p.Document == provider.Document && p.Id != provider.Id).Result.Any())
             {
                 Notification("Já existe um fornecedor com este documento informado!");
-                return;
+                return false;
             }
 
             await _providerRepository.Edit(provider);
+            return true;
         }
 
         public async Task UpdateAddress(Address address)
@@ -51,14 +53,21 @@ namespace LibraryStore.Business.Services
             await _addressRepository.Edit(address);
         }
 
-        public async Task Remove(Guid id)
+        public async Task<bool> Remove(Guid id)
         {
             if (_providerRepository.GetProviderProductsAddress(id).Result.Products.Any())
             {
                 Notification("O fornecedor possui produtos cadastrados");
+                return false;
             }
 
+            var address = await _addressRepository.GetAddressByProvider(id);
+
+            if (address != null)
+                await _addressRepository.Delete(address.Id);
+
             await _providerRepository.Delete(id);
+            return true;
         }
 
         public void Dispose()

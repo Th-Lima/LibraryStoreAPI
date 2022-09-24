@@ -4,11 +4,11 @@ namespace LibraryStore.Business.Interfaces
 {
     public interface IProviderService : IDisposable
     {
-        Task Add(Provider provider);
+        Task<bool> Add(Provider provider);
 
-        Task Update(Provider provider);
+        Task<bool> Update(Provider provider);
 
-        Task Remove(Guid id);
+        Task<bool> Remove(Guid id);
 
         Task UpdateAddress(Address address);
     }

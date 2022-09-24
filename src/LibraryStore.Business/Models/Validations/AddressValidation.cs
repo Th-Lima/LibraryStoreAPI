@@ -30,10 +30,6 @@ namespace LibraryStore.Business.Models.Validations
             RuleFor(c => c.NumberAddress)
                 .NotEmpty().WithMessage("O campo Numero precisa ser fornecido")
                 .Length(1, 50).WithMessage("O campo Numero precisa ter entre {MinLength} e {MaxLength} caracteres");
-
-            RuleFor(c => c.Complement)
-               .NotEmpty().WithMessage("O campo Complemento precisa ser fornecido")
-               .Length(2, 100).WithMessage("O campo Complemento precisa ter entre {MinLength} e {MaxLength} caracteres");
         }
     }
 }

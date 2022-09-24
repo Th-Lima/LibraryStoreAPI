@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace LibraryStore.Api.Dtos
 {
@@ -20,7 +18,6 @@ namespace LibraryStore.Api.Dtos
         public string NumberAddress { get; set; }
 
         [Display(Name = "Complemento")]
-        [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
         public string Complement { get; set; }
 
         [Display(Name = "CEP")]
@@ -42,8 +39,5 @@ namespace LibraryStore.Api.Dtos
         [Required(ErrorMessage = "O Campo {0} é obrigatório")]
         [StringLength(50, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
         public string State { get; set; }
-
-        [HiddenInput]
-        public Guid ProviderId { get; set; }
     }
 }
