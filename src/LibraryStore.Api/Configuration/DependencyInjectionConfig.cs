@@ -17,6 +17,7 @@ namespace LibraryStore.Api.Configuration
             services.AddScoped<IAddressRepository, AddressRepository>();
 
             services.AddScoped<INotifier, Notifier>();
+            services.AddScoped<IImageService, ImageService>();
 
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IProductService, ProductService>();

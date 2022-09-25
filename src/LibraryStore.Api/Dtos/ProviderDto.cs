@@ -27,7 +27,7 @@ namespace LibraryStore.Api.Dtos
         [Display(Name = "Ativo")]
         public bool Active { get; set; }
 
-        //[Display(Name = "Produtos")]
-        //public IEnumerable<ProductDto> Products { get; set; }
+        [Display(Name = "Produtos")]
+        public IEnumerable<ProductDto> Products { get; set; }
     }
 }

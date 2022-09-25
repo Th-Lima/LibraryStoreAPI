@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LibraryStore.Api.Dtos;
 using LibraryStore.Business.Interfaces;
-using LibraryStore.Data.Repository;
 using LibraryStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +31,7 @@ namespace LibraryStore.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ProviderDto>> GetById(Guid id)
+        public async Task<ActionResult<ProviderDto>> GetProviderById(Guid id)
         {
             var provider = await GetProviderProductsAddress(id);
 
@@ -42,8 +41,14 @@ namespace LibraryStore.Api.Controllers
             return provider;
         }
 
+        [HttpGet("get-address/{id:guid}")]
+        public async Task<AddressDto> GetProviderAddressById(Guid id)
+        {
+            return _mapper.Map<AddressDto>(await _addressRepository.GetById(id));
+        }
+
         [HttpPost]
-        public async Task<ActionResult<ProviderDto>> Add(ProviderDto providerDto)
+        public async Task<ActionResult<ProviderDto>> Post(ProviderDto providerDto)
         {
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
@@ -54,7 +59,7 @@ namespace LibraryStore.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<ProviderDto>> Update(Guid id, ProviderDto providerDto)
+        public async Task<ActionResult<ProviderDto>> Put(Guid id, ProviderDto providerDto)
         {
             if (id != providerDto.Id)
             {
@@ -71,27 +76,8 @@ namespace LibraryStore.Api.Controllers
             return CustomResponse(providerDto);
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<ProviderDto>> Delete(Guid id)
-        {
-            var providerDto = await GetProviderAddress(id);
-
-            if (providerDto == null)
-                return NotFound();
-
-            await _providerService.Remove(id);
-
-            return CustomResponse(providerDto);
-        }
-
-        [HttpGet("get-address/{id:guid}")]
-        public async Task<AddressDto> GetAddressById(Guid id)
-        {
-            return _mapper.Map<AddressDto>(await _addressRepository.GetById(id));
-        }
-
         [HttpPut("update-address/{id:guid}")]
-        public async Task<IActionResult> UpdateAddress(Guid id, AddressDto addressDto)
+        public async Task<IActionResult> Put(Guid id, AddressDto addressDto)
         {
             if (id != addressDto.Id)
             {
@@ -106,6 +92,19 @@ namespace LibraryStore.Api.Controllers
             await _providerService.UpdateAddress(_mapper.Map<Address>(addressDto));
 
             return CustomResponse(addressDto);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<ProviderDto>> Delete(Guid id)
+        {
+            var providerDto = await GetProviderAddress(id);
+
+            if (providerDto == null)
+                return NotFound();
+
+            await _providerService.Remove(id);
+
+            return CustomResponse(providerDto);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

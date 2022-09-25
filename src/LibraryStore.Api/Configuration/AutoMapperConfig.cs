@@ -10,7 +10,12 @@ namespace LibraryStore.Api.Configuration
         {
             CreateMap<Provider, ProviderDto>().ReverseMap();
             CreateMap<Address, AddressDto>().ReverseMap();
-            CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<ProductDto, Product>();
+
+            //CreateMap<ProdutoImagemViewModel, Produto>().ReverseMap();
+
+            CreateMap<Product, ProductDto>()
+                .ForMember(dest => dest.ProviderName, opt => opt.MapFrom(src => src.Provider.Name));
         }
     }
 }
