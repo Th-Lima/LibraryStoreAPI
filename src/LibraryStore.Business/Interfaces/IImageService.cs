@@ -1,7 +1,10 @@
-﻿namespace LibraryStore.Business.Interfaces
+﻿using Microsoft.AspNetCore.Http;
+
+namespace LibraryStore.Business.Interfaces
 {
     public interface IImageService
     {
-        public bool UploadFile(string file, string imgName);
+        public bool UploadFileAndConvertToBase64(string file, string imgName);
+        public Task<bool> UploadFileWithIFormFile(IFormFile file, string imgPrefix);
     }
 }

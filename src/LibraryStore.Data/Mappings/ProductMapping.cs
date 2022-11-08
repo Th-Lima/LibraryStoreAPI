@@ -22,7 +22,7 @@ namespace LibraryStore.Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(100)");
 
-            builder.ToTable("Produtos");
+            builder.ToTable("Products");
         }
     }
 }

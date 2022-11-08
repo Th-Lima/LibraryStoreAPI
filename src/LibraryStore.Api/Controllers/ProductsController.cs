@@ -47,13 +47,31 @@ namespace LibraryStore.Api.Controllers
 
             var imageName = $"{Guid.NewGuid()}_{productDto.Image}";
             
-            if(!_imageService.UploadFile(productDto.ImageUpload, imageName))
+            if(!_imageService.UploadFileAndConvertToBase64(productDto.ImageUpload, imageName))
                 return CustomResponse(productDto);
 
             productDto.Image = imageName;
             await _productService.Add(_mapper.Map<Product>(productDto));
 
             return CustomResponse(productDto);
+        }
+
+        [HttpPost("add-with-image-iformfile")]
+        //[RequestSizeLimit(40000000)]
+        public async Task<ActionResult<ProductImageDto>> PostWithImageIFormFile(ProductImageDto productImageDto)
+        {
+            if (!ModelState.IsValid)
+                return CustomResponse(ModelState);
+
+            var imgPrefix = $"{Guid.NewGuid()}_";
+
+            if (!await _imageService.UploadFileWithIFormFile(productImageDto.ImageUpload, imgPrefix))
+                return CustomResponse(ModelState);
+
+            productImageDto.Image = imgPrefix + productImageDto.ImageUpload.FileName;
+            await _productService.Add(_mapper.Map<Product>(productImageDto));
+
+            return CustomResponse(productImageDto);
         }
 
         [HttpDelete("{id:guid}")]
