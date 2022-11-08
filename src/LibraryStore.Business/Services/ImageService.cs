@@ -14,13 +14,13 @@ namespace LibraryStore.Business.Services
 
         public bool UploadFile(string file, string imgName)
         {
-            var imageDataByteArray = Convert.FromBase64String(file);
-
             if (string.IsNullOrEmpty(file))
             {
                 _notifier.Handle(new Notification("Forneça uma imagem para este produto!"));
                 return false;
             }
+
+            var imageDataByteArray = Convert.FromBase64String(file);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgName);
 
