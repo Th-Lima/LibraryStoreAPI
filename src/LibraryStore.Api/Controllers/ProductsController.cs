@@ -56,6 +56,7 @@ namespace LibraryStore.Api.Controllers
             return CustomResponse(productDto);
         }
 
+        #region Method with IFormFile image
         [HttpPost("add-with-image-iformfile")]
         //[RequestSizeLimit(40000000)]
         public async Task<ActionResult<ProductImageDto>> PostWithImageIFormFile(ProductImageDto productImageDto)
@@ -72,6 +73,42 @@ namespace LibraryStore.Api.Controllers
             await _productService.Add(_mapper.Map<Product>(productImageDto));
 
             return CustomResponse(productImageDto);
+        }
+        #endregion
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Put(Guid id, ProductImageDto productImageDto)
+        {
+            if (id != productImageDto.Id)
+            {
+                NotificationErro("Os Id's não são correspondentes");
+                return CustomResponse();
+            }
+
+            var productUpdate = await GetProduct(id);
+            productImageDto.Image = productUpdate.Image;
+            if (!ModelState.IsValid)
+                return CustomResponse(ModelState);
+
+            if(productImageDto.ImageUpload != null)
+            {
+                var imageName = Guid.NewGuid() + "_" + productImageDto.Image;
+                if(!await _imageService.UploadFileWithIFormFile(productImageDto.ImageUpload, imageName))
+                {
+                    return CustomResponse(ModelState);
+                }
+
+                productUpdate.Image = imageName;
+            }
+
+            productUpdate.Name = productImageDto.Name;
+            productUpdate.Description = productImageDto.Description;
+            productUpdate.Price = productImageDto.Price;
+            productUpdate.Active = productImageDto.Active;
+
+            await _productService.Update(_mapper.Map<Product>(productUpdate));
+
+            return CustomResponse(productUpdate);
         }
 
         [HttpDelete("{id:guid}")]
