@@ -8,6 +8,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 
+#region Identity
+builder.Services.AddIdentityConfiguration(builder.Configuration);
+#endregion
+
 builder.Services.AddDbContext<LibraryStoreDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -22,6 +26,8 @@ builder.Services.ResolveDependencies();
 #endregion
 
 var app = builder.Build();
+
+app.UseAuthentication();
 
 if (app.Environment.IsDevelopment())
 {
