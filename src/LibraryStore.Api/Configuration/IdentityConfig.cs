@@ -1,4 +1,5 @@
 ﻿using LibraryStore.Api.Data;
+using LibraryStore.Api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ namespace LibraryStore.Api.Configuration
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AuthDbContext>()
+                .AddErrorDescriber<IdentityMessagesPortuguese>()
                 .AddDefaultTokenProviders();
 
             return services;
