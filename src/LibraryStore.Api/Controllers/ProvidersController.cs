@@ -2,11 +2,13 @@
 using LibraryStore.Api.Dtos;
 using LibraryStore.Business.Interfaces;
 using LibraryStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryStore.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class ProvidersController : MainController
     {
         private readonly IProviderRepository _providerRepository;
@@ -23,6 +25,7 @@ namespace LibraryStore.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProviderDto>>> GetAll()
         {
             var providers = _mapper.Map<IEnumerable<ProviderDto>>(await _providerRepository.GetAll());
