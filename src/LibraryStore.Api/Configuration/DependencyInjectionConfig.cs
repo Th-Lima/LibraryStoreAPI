@@ -1,4 +1,5 @@
-﻿using LibraryStore.Business.Interfaces;
+﻿using LibraryStore.Api.Extensions;
+using LibraryStore.Business.Interfaces;
 using LibraryStore.Business.Notifications;
 using LibraryStore.Business.Services;
 using LibraryStore.Data.Context;
@@ -21,6 +22,8 @@ namespace LibraryStore.Api.Configuration
 
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IJwtSettings, JwtSettings>();
 
             return services;
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryStore.Api.Dtos;
+using LibraryStore.Api.Extensions;
 using LibraryStore.Business.Interfaces;
 using LibraryStore.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +26,6 @@ namespace LibraryStore.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProviderDto>>> GetAll()
         {
             var providers = _mapper.Map<IEnumerable<ProviderDto>>(await _providerRepository.GetAll());
@@ -50,6 +50,7 @@ namespace LibraryStore.Api.Controllers
             return _mapper.Map<AddressDto>(await _addressRepository.GetById(id));
         }
 
+        [ClaimsAuthorize("Provider", "Add")]
         [HttpPost]
         public async Task<ActionResult<ProviderDto>> Post(ProviderDto providerDto)
         {
@@ -61,6 +62,7 @@ namespace LibraryStore.Api.Controllers
             return CustomResponse(providerDto);
         }
 
+        [ClaimsAuthorize("Provider", "Update")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<ProviderDto>> Put(Guid id, ProviderDto providerDto)
         {
@@ -79,6 +81,7 @@ namespace LibraryStore.Api.Controllers
             return CustomResponse(providerDto);
         }
 
+        [ClaimsAuthorize("Provider", "Update")]
         [HttpPut("update-address/{id:guid}")]
         public async Task<IActionResult> Put(Guid id, AddressDto addressDto)
         {
@@ -97,6 +100,7 @@ namespace LibraryStore.Api.Controllers
             return CustomResponse(addressDto);
         }
 
+        [ClaimsAuthorize("Provider", "Remove")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProviderDto>> Delete(Guid id)
         {
