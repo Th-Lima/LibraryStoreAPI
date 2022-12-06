@@ -1,4 +1,5 @@
 ﻿using LibraryStore.Api.Dtos.AuthUserDtos;
+using LibraryStore.Api.JwtAuthentication;
 using LibraryStore.Business.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,7 @@ namespace LibraryStore.Api.Controllers
 
             foreach(var error in result.Errors)
             {
-                NotificationErro(error.Description);
+                NotificationError(error.Description);
             }
 
             return CustomResponse(registerUserDto);
@@ -65,11 +66,11 @@ namespace LibraryStore.Api.Controllers
 
             if (result.IsLockedOut)
             {
-                NotificationErro("Usuário temporariamente bloqueado por tentativas inválidas");
+                NotificationError("Usuário temporariamente bloqueado por tentativas inválidas");
                 return CustomResponse(loginUserDto);
             }
 
-            NotificationErro("Usuário e Senha incorretos");
+            NotificationError("Usuário e Senha incorretos");
             return CustomResponse(loginUserDto);
         }
     }

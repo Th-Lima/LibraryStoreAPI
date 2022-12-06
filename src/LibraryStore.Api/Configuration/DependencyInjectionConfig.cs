@@ -1,4 +1,5 @@
 ﻿using LibraryStore.Api.Extensions;
+using LibraryStore.Api.JwtAuthentication;
 using LibraryStore.Business.Interfaces;
 using LibraryStore.Business.Notifications;
 using LibraryStore.Business.Services;

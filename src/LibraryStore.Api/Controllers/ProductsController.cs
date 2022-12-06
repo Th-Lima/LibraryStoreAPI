@@ -2,11 +2,13 @@
 using LibraryStore.Api.Dtos;
 using LibraryStore.Business.Interfaces;
 using LibraryStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryStore.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductsController : MainController
     {
         private readonly IProductRepository _productRepository;
@@ -81,7 +83,7 @@ namespace LibraryStore.Api.Controllers
         {
             if (id != productImageDto.Id)
             {
-                NotificationErro("Os Id's não são correspondentes");
+                NotificationError("Os Id's não são correspondentes");
                 return CustomResponse();
             }
 

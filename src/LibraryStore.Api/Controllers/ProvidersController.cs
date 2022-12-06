@@ -68,7 +68,7 @@ namespace LibraryStore.Api.Controllers
         {
             if (id != providerDto.Id)
             {
-                NotificationErro("Não encontramos este fornecedor, o id não é o mesmo informado na query");
+                NotificationError("Não encontramos este fornecedor, o id não é o mesmo informado na query");
                 
                 return CustomResponse(providerDto);
             }
@@ -87,7 +87,7 @@ namespace LibraryStore.Api.Controllers
         {
             if (id != addressDto.Id)
             {
-                NotificationErro("Não encontramos este endereço, o id não é o mesmo informado na query");
+                NotificationError("Não encontramos este endereço, o id não é o mesmo informado na query");
 
                 return CustomResponse(addressDto);
             }

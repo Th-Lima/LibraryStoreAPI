@@ -1,4 +1,5 @@
-﻿using LibraryStore.Business.Interfaces;
+﻿using LibraryStore.Api.Dtos.AuthUserDtos;
+using LibraryStore.Api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -6,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace LibraryStore.Api.Extensions
+namespace LibraryStore.Api.JwtAuthentication
 {
     public class JwtSettings : IJwtSettings
     {
@@ -19,7 +20,7 @@ namespace LibraryStore.Api.Extensions
             _appSettings = appSettings.Value;
         }
 
-        public async Task<string> GenerateJwt(string email)
+        public async Task<LoginResponseDto> GenerateJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user);
@@ -52,7 +53,23 @@ namespace LibraryStore.Api.Extensions
 
             var encodedToken = tokenHandler.WriteToken(token);
 
-            return encodedToken;
+            var response = new LoginResponseDto
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationHours).TotalSeconds,
+                UserToken = new UserTokenDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(x => new ClaimDto 
+                    { 
+                        Type = x.Type,
+                        Value = x.Value 
+                    })
+                }
+            };
+            
+            return response;
         }
 
         private static long ToUnixEpochDate(DateTime date) =>

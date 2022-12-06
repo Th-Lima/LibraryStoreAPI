@@ -52,11 +52,11 @@ namespace LibraryStore.Api.Controllers
             {
                 var errorMessage = error.Exception == null ? error.ErrorMessage : error.Exception.Message;
 
-                NotificationErro(errorMessage);
+                NotificationError(errorMessage);
             }
         }
 
-        protected void NotificationErro(string message)
+        protected void NotificationError(string message)
         {
             _notifier.Handle(new Notification(message));
         }
