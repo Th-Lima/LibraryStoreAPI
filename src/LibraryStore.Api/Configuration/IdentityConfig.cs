@@ -21,7 +21,7 @@ namespace LibraryStore.Api.Configuration
                 .AddErrorDescriber<IdentityMessagesPortuguese>()
                 .AddDefaultTokenProviders();
 
-            //JWT
+            #region JWT
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
@@ -46,6 +46,7 @@ namespace LibraryStore.Api.Configuration
                     ValidIssuer = appSettings.Issuer
                 };
             });
+            #endregion
 
             return services;
         }

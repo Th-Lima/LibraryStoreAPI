@@ -31,6 +31,7 @@ namespace LibraryStore.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProviderDto>>> GetAll()
         {
             var providers = _mapper.Map<IEnumerable<ProviderDto>>(await _providerRepository.GetAll());
