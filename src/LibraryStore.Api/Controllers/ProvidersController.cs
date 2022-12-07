@@ -17,7 +17,12 @@ namespace LibraryStore.Api.Controllers
         private readonly IProviderService _providerService;
         private readonly IMapper _mapper;
 
-        public ProvidersController(IProviderRepository providerRepository, IAddressRepository addressRepository, IProviderService providerService, IMapper mapper, INotifier notifier) : base(notifier)
+        public ProvidersController(IProviderRepository providerRepository,
+            IAddressRepository addressRepository,
+            IProviderService providerService,
+            IMapper mapper,
+            INotifier notifier,
+            IUser appUser) : base(notifier, appUser)
         {
             _providerRepository = providerRepository;
             _addressRepository = addressRepository;

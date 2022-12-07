@@ -16,7 +16,12 @@ namespace LibraryStore.Api.Controllers
         private readonly IImageService _imageService;
         private readonly IMapper _mapper;
 
-        public ProductsController(INotifier notifier, IProductRepository productRepository, IProductService productService, IImageService imageService, IMapper mapper) : base(notifier)
+        public ProductsController(INotifier notifier,
+            IProductRepository productRepository,
+            IProductService productService,
+            IImageService imageService,
+            IMapper mapper,
+            IUser appUser) : base(notifier, appUser)
         {
             _productRepository = productRepository;
             _productService = productService;

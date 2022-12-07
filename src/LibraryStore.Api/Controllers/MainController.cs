@@ -9,10 +9,21 @@ namespace LibraryStore.Api.Controllers
     public abstract class MainController : ControllerBase
     {
         private readonly INotifier _notifier;
+        public readonly IUser AppUser;
 
-        protected MainController(INotifier notifier)
+        public Guid UserId { get; set; }
+        protected bool AuthenticatedUser { get; set; }
+
+        protected MainController(INotifier notifier, IUser appUser)
         {
             _notifier = notifier;
+            AppUser = appUser;
+
+            if (appUser.IsAuthenticated())
+            {
+                UserId = appUser.GetUserId();
+                AuthenticatedUser = true;
+            }
         }
 
         protected bool ValidOperation()

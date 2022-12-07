@@ -14,17 +14,25 @@ namespace LibraryStore.Api.Configuration
         {
             services.AddScoped<LibraryStoreDbContext>();
 
+            //Repositories
             services.AddScoped<IProviderRepository, ProviderRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
 
+            //Notification
             services.AddScoped<INotifier, Notifier>();
-            services.AddScoped<IImageService, ImageService>();
 
+            //Services
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IProductService, ProductService>();
 
+            //JWT auth
             services.AddScoped<IJwtSettings, JwtSettings>();
+
+            //Http AspNet
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AspNetUser>();
 
             return services;
         }

@@ -16,7 +16,8 @@ namespace LibraryStore.Api.Controllers
         public AuthController(INotifier notifier, 
                               SignInManager<IdentityUser> signInManager, 
                               UserManager<IdentityUser> userManager, 
-                              IJwtSettings jwtSettings) : base(notifier)
+                              IJwtSettings jwtSettings,
+                              IUser appUser) : base(notifier, appUser)
         {
             _signInManager = signInManager;
             _userManager = userManager;

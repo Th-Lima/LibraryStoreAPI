@@ -7,16 +7,20 @@ namespace LibraryStore.Business.Services
     public class ProductService : BaseService, IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IUser _user;
 
-        public ProductService(IProductRepository productRepository, INotifier notifier) : base(notifier)
+        public ProductService(IProductRepository productRepository, INotifier notifier, IUser appUser) : base(notifier)
         {
             _productRepository = productRepository;
+            _user = appUser;
         }
 
         public async Task Add(Product product)
         {
             if (!ExecuteValidation(new ProductValidation(), product)) 
                 return;
+
+            //var userEmail = _user.GetUserEmail();
 
             await _productRepository.Add(product);
         }
