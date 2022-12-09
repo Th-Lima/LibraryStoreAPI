@@ -1,12 +1,14 @@
 ﻿using LibraryStore.Api.Dtos.AuthUserDtos;
 using LibraryStore.Api.JwtAuthentication;
 using LibraryStore.Business.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryStore.Api.Controllers
 {
     [Route("api")]
+    [DisableCors]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
