@@ -33,7 +33,7 @@ namespace LibraryStore.Api.Controllers
 
         protected ActionResult CustomResponse(object result = null)
         {
-            if(ValidOperation())
+            if (ValidOperation())
                 return Ok(new
                 {
                     success = true,
@@ -49,7 +49,7 @@ namespace LibraryStore.Api.Controllers
 
         protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
-            if(!modelState.IsValid) 
+            if (!modelState.IsValid)
                 NotificationErrorModelStateInvalid(modelState);
 
             return CustomResponse();

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LibraryStore.Api.Controllers;
 using LibraryStore.Api.Dtos;
 using LibraryStore.Api.Extensions;
 using LibraryStore.Business.Interfaces;
@@ -6,9 +7,10 @@ using LibraryStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LibraryStore.Api.Controllers
+namespace LibraryStore.Api.v1.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [Authorize]
     public class ProvidersController : MainController
     {
