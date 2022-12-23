@@ -1,11 +1,11 @@
 using LibraryStore.Api.Configuration;
 using LibraryStore.Data.Context;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 
 #region Identity
@@ -21,6 +21,10 @@ builder.Services.AddDbContext<LibraryStoreDbContext>(options =>
 builder.Services.WebApiConfig();
 #endregion
 
+#region Swagger
+builder.Services.AddSwaggerConfig();
+#endregion
+
 #region Dependency Injection
 builder.Services.ResolveDependencies();
 #endregion
@@ -32,8 +36,6 @@ app.UseAuthentication();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("Development");
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 else
 {
@@ -47,5 +49,8 @@ app.MapControllers();
 #region MVC Config
 app.UseMvcConfiguration();
 #endregion
+
+var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+app.UseSwaggerConfig(apiVersionDescriptionProvider);
 
 app.Run();

@@ -5,6 +5,8 @@ using LibraryStore.Business.Notifications;
 using LibraryStore.Business.Services;
 using LibraryStore.Data.Context;
 using LibraryStore.Data.Repository;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LibraryStore.Api.Configuration
 {
@@ -33,6 +35,9 @@ namespace LibraryStore.Api.Configuration
             //Http AspNet
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>();
+
+            //Swagger
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             return services;
         }
