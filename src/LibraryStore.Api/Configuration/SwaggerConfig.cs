@@ -43,9 +43,11 @@ namespace LibraryStore.Api.Configuration
             return services;
         }
 
-        public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
+        public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider, WebApplication webApp)
         {
-            //app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+            if (!webApp.Environment.IsDevelopment())
+                app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+
             app.UseSwagger();
             app.UseSwaggerUI(
                 options =>
@@ -55,6 +57,7 @@ namespace LibraryStore.Api.Configuration
                         options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                     }
                 });
+
             return app;
         }
     }
@@ -142,8 +145,7 @@ namespace LibraryStore.Api.Configuration
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.StartsWithSegments("/swagger")
-                && !context.User.Identity.IsAuthenticated)
+            if (context.Request.Path.StartsWithSegments("/swagger") && !context.User.Identity.IsAuthenticated)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;

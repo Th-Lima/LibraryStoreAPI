@@ -51,6 +51,7 @@ app.UseMvcConfiguration();
 #endregion
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-app.UseSwaggerConfig(apiVersionDescriptionProvider);
+
+app.UseSwaggerConfig(apiVersionDescriptionProvider, app);
 
 app.Run();
