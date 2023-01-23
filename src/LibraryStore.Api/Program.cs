@@ -1,4 +1,5 @@
 using LibraryStore.Api.Configuration;
+using LibraryStore.Api.Extensions;
 using LibraryStore.Data.Context;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,10 @@ builder.Services.WebApiConfig();
 builder.Services.AddSwaggerConfig();
 #endregion
 
+#region Logger
+builder.Services.AddLoggingConfiguration();
+#endregion
+
 #region Dependency Injection
 builder.Services.ResolveDependencies();
 #endregion
@@ -43,7 +48,10 @@ else
     app.UseHsts();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthorization();
+
 app.MapControllers();
 
 #region MVC Config
@@ -53,5 +61,7 @@ app.UseMvcConfiguration();
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 app.UseSwaggerConfig(apiVersionDescriptionProvider, app);
+
+app.UseLoggingConfiguration();
 
 app.Run();

@@ -16,16 +16,19 @@ namespace LibraryStore.Api.v1.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtSettings _jwtSettings;
+        private readonly ILogger _logger;
 
         public AuthController(INotifier notifier, 
                               SignInManager<IdentityUser> signInManager, 
                               UserManager<IdentityUser> userManager, 
                               IJwtSettings jwtSettings,
-                              IUser appUser) : base(notifier, appUser)
+                              IUser appUser, 
+                              ILogger<AuthController> logger) : base(notifier, appUser)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtSettings = jwtSettings;
+            _logger = logger;
         }
 
         [HttpPost("new-account")]
@@ -67,7 +70,11 @@ namespace LibraryStore.Api.v1.Controllers
             var result = await _signInManager.PasswordSignInAsync(loginUserDto.Email, loginUserDto.Password, false, true);
 
             if (result.Succeeded)
+            {
+                _logger.LogInformation($"Usuário {loginUserDto.Email} autenticado com sucesso");
+
                 return CustomResponse(await _jwtSettings.GenerateJwt(loginUserDto.Email));
+            }
 
             if (result.IsLockedOut)
             {
@@ -75,7 +82,7 @@ namespace LibraryStore.Api.v1.Controllers
                 return CustomResponse(loginUserDto);
             }
 
-            NotificationError("Usuário e Senha incorretos");
+            NotificationError("Usuário ou Senha incorretos");
             return CustomResponse(loginUserDto);
         }
     }
