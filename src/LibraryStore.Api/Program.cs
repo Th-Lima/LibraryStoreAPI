@@ -27,7 +27,7 @@ builder.Services.AddSwaggerConfig();
 #endregion
 
 #region Logger
-builder.Services.AddLoggingConfiguration();
+builder.Services.AddLoggingConfiguration(builder.Configuration);
 #endregion
 
 #region Dependency Injection
@@ -55,7 +55,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 #region MVC Config
-app.UseMvcConfiguration();
+app.UseMvcConfiguration(app.Environment);
 #endregion
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
